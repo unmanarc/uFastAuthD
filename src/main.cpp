@@ -46,6 +46,9 @@ public:
             _exit(-3);
         }
 
+        // Creates the FastRPC Implementation
+        Globals::setFastRPC(new AUTHSERVER::RPC::FastRPCImpl);
+
         // Initiate the RPC Listener
         if (!AUTHSERVER::RPC::LoginRPCServerImpl::createRPCListenerCAB())
         {

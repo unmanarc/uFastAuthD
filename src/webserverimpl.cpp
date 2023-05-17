@@ -9,6 +9,7 @@
 
 #include  <boost/algorithm/string/predicate.hpp>
 
+#include <memory>
 #include <sstream>
 #include <ostream>
 #include <inttypes.h>
@@ -51,7 +52,7 @@ bool WebServerImpl::createWebServer()
         Authentication::Domains * authDomains = new Authentication::Domains;
         MethodsManager *methodsManagers = new MethodsManager(DB_APPNAME);
 
-        // Add methods:
+        // Add authentication methods for the session:
         RPC::Templates::FullAuth::AddFullAuthMethods(methodsManagers,DB_APPNAME);
 
         // Add the default domain / auth:
@@ -111,7 +112,7 @@ bool WebServerImpl::createWebService()
         Authentication::Domains * authDomains = new Authentication::Domains;
         MethodsManager *methodsManagers = new MethodsManager(DB_APPNAME);
 
-        // Add methods:
+        // Add authentication methods:
         RPC::Templates::FullAuth::AddFullAuthMethods(methodsManagers,DB_APPNAME);
 
         // Add the default domain / auth:

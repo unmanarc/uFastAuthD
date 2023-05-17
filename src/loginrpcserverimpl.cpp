@@ -6,6 +6,7 @@
 #include <mdz_net_sockets/acceptor_multithreaded.h>
 #include <mdz_net_sockets/streams_cryptochallenge.h>
 #include <mdz_prg_logs/applog.h>
+#include <memory>
 
 #include "globals.h"
 //#include "defs.h"
@@ -76,8 +77,6 @@ bool LoginRPCServerImpl::createRPCListenerCAB()
             return false;
         }
 
-        Globals::setFastRPC(new FastRPCImpl);
-
         // Set RPC Methods.
         Mantids::RPC::Templates::LoginAuth::AddLoginAuthMethods(
                     Globals::getAuthManager(),
@@ -123,8 +122,6 @@ bool LoginRPCServerImpl::createRPCListenerPAB()
         uint16_t listenPort = Globals::getConfig_main()->get<uint16_t>("LoginRPCServerPAB.ListenPort",30302);
         std::string listenAddr = Globals::getConfig_main()->get<std::string>("LoginRPCServerPAB.ListenAddr","0.0.0.0");
 
-        Globals::setFastRPC(new FastRPCImpl);
-
         // Set RPC Methods.
         Mantids::RPC::Templates::LoginAuth::AddLoginAuthMethods(
                     Globals::getAuthManager(),
@@ -154,24 +151,21 @@ bool LoginRPCServerImpl::createRPCListenerPAB()
 
 void FastRPCImpl::eventUnexpectedAnswerReceived(Fast::FastRPC_Connection *, const std::string &)
 {
-    LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error");
-
+    LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error - Unexpected Answer");
 }
 
-void FastRPCImpl::eventFullQueueDrop(Fast::sFastRPCParameters *)
+void FastRPCImpl::eventFullQueueDrop(Mantids::RPC::Fast::sFastRPCParameters *)
 {
-    LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error");
-
+    LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error - Event Queue Full");
 }
 
 void FastRPCImpl::eventRemotePeerDisconnected(const std::string &, const std::string &, const json &)
 {
-    LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error");
-
+    LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error - Remote Peer Disconnected");
 }
 
 void FastRPCImpl::eventRemoteExecutionTimedOut(const std::string &, const std::string &, const json &)
 {
-    LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error");
+    LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error - Remote Execution Timed Out");
 
 }
