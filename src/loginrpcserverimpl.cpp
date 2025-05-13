@@ -31,7 +31,7 @@ bool LoginRPCServerImpl::callbackOnRPCConnect(void *, Mantids::Network::Sockets:
 
     std::string rpcClientKey = appName + "." + Mantids::Helpers::Random::createRandomString(8);
 
-    LOG_APP->log0(__func__,Logs::LEVEL_INFO, "Incomming %sRPC connection from %s (ID: %s)", secure?"secure ":"", remoteAddr, rpcClientKey.c_str());
+    LOG_APP->log0(__func__,Logs::LEVEL_INFO, "Incoming %sRPC connection from %s (ID: %s)", secure?"secure ":"", remoteAddr, rpcClientKey.c_str());
 
     if (cstream.mutualChallengeResponseSHA256Auth(appKey,true) == std::make_pair(true,true))
     {
@@ -167,5 +167,4 @@ void FastRPCImpl::eventRemotePeerDisconnected(const std::string &, const std::st
 void FastRPCImpl::eventRemoteExecutionTimedOut(const std::string &, const std::string &, const json &)
 {
     LOG_APP->log0(__func__,Logs::LEVEL_ERR, "RPC Error - Remote Execution Timed Out");
-
 }
