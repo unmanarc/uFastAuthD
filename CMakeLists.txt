@@ -77,7 +77,9 @@ target_link_libraries(${APP_NAME} ${JSONCPP_LIBRARIES})
 
 ################################################################################
 # libMantids packages:
-pkg_check_modules(MANTIDS_LIBS REQUIRED mdz_xrpc_fast mdz_xrpc_templates mdz_xrpc_webserver mdz_xrpc_common mdz_xrpc_templates mdz_auth mdz_auth_db mdz_db mdz_db_sqlite3 mdz_proto_http mdz_proto_mime mdz_net_sockets mdz_thr_mutex mdz_thr_safecontainers mdz_thr_threads mdz_prg_service mdz_prg_logs mdz_mem_vars mdz_hlp_functions)
+pkg_check_modules(MANTIDS_LIBS REQUIRED
+    mdz_xrpc_fast
+    mdz_xrpc_templates mdz_xrpc_webserver mdz_xrpc_common mdz_xrpc_templates mdz_auth mdz_auth_db mdz_db mdz_db_sqlite3 mdz_proto_http mdz_proto_mime mdz_net_sockets mdz_thr_mutex mdz_thr_safecontainers mdz_thr_threads mdz_prg_service mdz_prg_logs mdz_mem_vars mdz_hlp_functions)
 include_directories(${MANTIDS_LIBS_INCLUDE_DIRS})
 link_directories(${MANTIDS_LIBS_LIBRARY_DIRS})
 target_link_libraries(${APP_NAME} ${MANTIDS_LIBS_LIBRARIES})
