@@ -86,8 +86,8 @@ bool LoginRPCServerImpl::createRPCListenerCAB()
         Network::Sockets::Acceptors::MultiThreaded * multiThreadedAcceptor = new Network::Sockets::Acceptors::MultiThreaded;
         multiThreadedAcceptor->setMaxConcurrentClients( Globals::getConfig_main()->get<uint16_t>("LoginRPCServerCAB.MaxClients",512) );
         multiThreadedAcceptor->setCallbackOnConnect(callbackOnRPCConnect,nullptr);
-
-        if (sockRPCListen->listenOn(listenPort ,listenAddr.c_str(), !Globals::getConfig_main()->get<bool>("LoginRPCServerCAB.ipv6",false) ))
+        sockRPCListen->setUseIPv6(Globals::getConfig_main()->get<bool>("LoginRPCServerCAB.ipv6",false));
+        if (sockRPCListen->listenOn(listenPort ,listenAddr.c_str() ))
         {
             multiThreadedAcceptor->setAcceptorSocket(sockRPCListen);
             multiThreadedAcceptor->startThreaded();
@@ -132,7 +132,8 @@ bool LoginRPCServerImpl::createRPCListenerPAB()
         multiThreadedAcceptor->setMaxConcurrentClients( Globals::getConfig_main()->get<uint16_t>("LoginRPCServerPAB.MaxClients",512) );
         multiThreadedAcceptor->setCallbackOnConnect(callbackOnRPCConnect,nullptr);
 
-        if (sockRPCListen->listenOn(listenPort ,listenAddr.c_str(), !Globals::getConfig_main()->get<bool>("LoginRPCServerPAB.ipv6",false) ))
+        sockRPCListen->setUseIPv6(Globals::getConfig_main()->get<bool>("LoginRPCServerPAB.ipv6",false));
+        if (sockRPCListen->listenOn(listenPort ,listenAddr.c_str() ))
         {
             multiThreadedAcceptor->setAcceptorSocket(sockRPCListen);
             multiThreadedAcceptor->startThreaded();

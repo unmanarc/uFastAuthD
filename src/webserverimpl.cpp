@@ -47,7 +47,8 @@ bool WebServerImpl::createWebServer()
         return false;
     }
 
-    if (sockWebListen->listenOn(listenPort ,listenAddr.c_str(), !Globals::getConfig_main()->get<bool>("WebServer.ipv6",false) ))
+    sockWebListen->setUseIPv6(Globals::getConfig_main()->get<bool>("WebServer.ipv6",false));
+    if (sockWebListen->listenOn(listenPort ,listenAddr.c_str() ))
     {
         Authentication::Domains * authDomains = new Authentication::Domains;
         MethodsManager *methodsManagers = new MethodsManager(DB_APPNAME);
@@ -107,7 +108,8 @@ bool WebServerImpl::createWebService()
         return false;
     }
 
-    if (sockWebListen->listenOn(listenPort ,listenAddr.c_str(), !Globals::getConfig_main()->get<bool>("WebService.ipv6",false) ))
+    sockWebListen->setUseIPv6(Globals::getConfig_main()->get<bool>("WebService.ipv6",false));
+    if (sockWebListen->listenOn(listenPort ,listenAddr.c_str() ))
     {
         Authentication::Domains * authDomains = new Authentication::Domains;
         MethodsManager *methodsManagers = new MethodsManager(DB_APPNAME);
