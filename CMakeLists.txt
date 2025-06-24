@@ -30,7 +30,6 @@ if (CMAKE_INSTALL_PREFIX)
     target_link_libraries(${APP_NAME} "-L${CMAKE_INSTALL_PREFIX}/lib64")
 endif()
 
-
 ################################################################################
 # PKG-CONFIG INIT:
 find_package(PkgConfig REQUIRED)
