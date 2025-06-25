@@ -3,6 +3,17 @@ var requireNextAuth = false;
 var nextPassIDX = 0;
 var nextPassDESC = "";
 
+function showElement(element) {
+    // In Bootstrap 5, we typically use classes to control visibility.
+    // This function will remove the 'd-none' class if it exists to make the element visible.
+    element.classList.remove('d-none');
+}
+function hideElement(element) {
+    // In Bootstrap 5, we can use the 'd-none' class to hide elements.
+    // This function will add the 'd-none' class to hide the element.
+    element.classList.add('d-none');
+}
+
 function loginFAILED(request, status, error) {
 
     // Reset Login/Password Status to reenable it:
@@ -155,8 +166,8 @@ function ajaxLogin() {
 
 function ajaxLogout()
 {
-    document.getElementById("loginform").style.visibility = "visible";
-    document.getElementById("logoutform").style.visibility = "collapse";
+    showElement(document.getElementById("loginform"));
+    hideElement(document.getElementById("logoutform"));
 
     $.ajax({
         url: '/japi_session?mode=LOGOUT',
@@ -172,11 +183,13 @@ function ajaxLogout()
     });
 }
 
+
+
 function showLogoutDialogOnSession() {
     // As cookie should be httpOnly, javascript can't know if there is a session, so, we try to get the CSRF token, 
 
-    document.getElementById("loginform").style.visibility = "visible";
-    document.getElementById("logoutform").style.visibility = "collapse";
+    showElement(document.getElementById("loginform"));
+    hideElement(document.getElementById("logoutform"));
 
     if (csrfToken == null)
     {
@@ -187,8 +200,8 @@ function showLogoutDialogOnSession() {
     else
     {
         // if returns the token, the cookie exist...  go to logout page.
-        document.getElementById("loginform").style.visibility = "collapse";
-        document.getElementById("logoutform").style.visibility = "visible";
+        hideElement(document.getElementById("loginform"));
+        showElement(document.getElementById("logoutform"));
 
         $('#message').text('There is an active session.');
     }

@@ -10,16 +10,16 @@
   <td>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">Group Details</a>
+        <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="true">Group Details</button>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="accounts-tab" data-toggle="tab" href="#accounts" role="tab" aria-controls="accounts" aria-selected="false">Accounts</a>
+        <button class="nav-link" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts" type="button" role="tab" aria-controls="accounts" aria-selected="false">Accounts</button>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="applications-tab" data-toggle="tab" href="#applications" role="tab" aria-controls="applications" aria-selected="false">Applications / Attribs</a>
+        <button class="nav-link" id="applications-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab" aria-controls="applications" aria-selected="false">Applications / Attribs</button>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="advanced-tab" data-toggle="tab" href="#advanced" role="tab" aria-controls="advanced" aria-selected="false">Advanced Controls</a>
+        <button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced" type="button" role="tab" aria-controls="advanced" aria-selected="false">Advanced Controls</button>
       </li>
     </ul>
   </td>
@@ -123,7 +123,8 @@
 
 <script>
   document.getElementById("apptitle").innerHTML = "Groups &#9658; Edit Group";
-  
+    document.getElementById("mainview-group-edit-link").style.color = "white";
+
 
     function groupAttribRemove(appId,attribId)
     {

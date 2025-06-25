@@ -19,38 +19,61 @@
 <%jvar/maxAge:maxAge%>
 
 <body onload="javascript:ajaxLoginStart()">
+    <!-- Added an outer container with flex to vertically center -->
+    <div class="d-flex align-items-center justify-content-center vh-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-4" style="min-width: 400px;">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="brand-wrapper">
+                                <div class="d-flex justify-content-center">
+                                    <img src="assets/images/logo.jpg" alt="logo" class="logo" width="300">
+                                </div>
+                                <p class="login-card-header-text" id="version"></p>
+                                <p class="login-card-header-message" id="message">_</p>
+                            </div>
     
-    <div class="row text-center vh-100 justify-content-center align-items-center">
-        <div class="col-md-5 text-center my-auto">
-            <div class="card card-block d-flex login-card">
-                <div class="card-body align-items-center justify-content-center">
+                            <div id="logoutform">
+                                <form action="#!">
+                                    <button name="logout" type="button" class="w-100 btn bg-black text-white"
+                                        style="padding: 8px; font-size: 14px;" onclick="javascript:ajaxLogout()">Logout</button>
+                                </form>
+                            </div>
+                            <div id="loginform">
+                                <form action="#!">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label" style="font-size: 0.9rem;">Username</label>
+                                        <input type="text" class="form-control" name="username" id="username" name="username" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label" style="font-size: 0.9rem;">Password</label>
+                                        <input type="password" class="form-control" name="password" id="password" name="password" placeholder="" required>
+                                    </div>
+                                    &nbsp;
+                                    <button  name="login" type="button" class="w-100 btn bg-black text-white"
+                                        style="padding: 8px; font-size: 14px;" onclick="javascript:ajaxLogin()">Login</button>
+                                </form>
+                            </div>
 
-                    <div class="brand-wrapper">
-                        <img src="assets/images/logo.jpg" alt="logo" class="logo" width="300">
-                        <p class="login-card-header-text" id="version"></p>
-                        <p class="login-card-header-message" id="message">_</p>
+                            <div class="row text-center justify-content-center" style="font-size: 10px">
+                                <br>
+                                Licenced under LGPLv3
+                                <a href="https://github.com/unmanarc/libMantids" style="font-size: 10px" target="_blank">Powered by libMantids</a>
+                            </div>
+                        </div>
                     </div>
-
-                    <table width=100% id="loginform"><tr><td align="center"><form action="#!">
-                        <div class="form-group"> <label for="username" class="sr-only">Username</label> <input type="username" name="username" id="username" class="form-control" placeholder="Username"> </div>
-                        <div class="form-group mb-4"> <label for="password" class="sr-only">Password</label> <input type="password" name="password" id="password" class="form-control" placeholder="********"></div>
-                        <input name="login" id="login" class="btn btn-block login-btn mb-4" type="button" value="Login" onclick="javascript:ajaxLogin()">
-                    </form></td></tr></table>
-
-                    <table width=100% id="logoutform"><tr><td align="center"><form action="#!">
-                        <input name="logout" id="logout" class="btn btn-block login-btn mb-4" type="button" value="Logout" onclick="javascript:ajaxLogout()">
-                    </form></td></tr></table>
-
-                    <a href="https://github.com/unmanarc/libMantids" style="font-size: 10px" target="_blank">Powered by libMantids</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row text-center justify-content-center" style="font-size: 10px">
-        <p>Licenced under LGPLv3</p>
-    </div>
 
     <script>
+        $('#username').keypress(function (e) {
+            if (e.which === 13) { // Enter key
+                $('#password').focus();
+            }
+        });
         $('#password').keypress(function (e) {
             var key = e.which;
             if (key == 13)  // the enter key code

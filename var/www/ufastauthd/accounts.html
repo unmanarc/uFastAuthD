@@ -5,6 +5,7 @@
 
 <script>
   document.getElementById("apptitle").innerHTML = "Accounts &#9658; Accounts Directory";
+  document.getElementById("mainview-accounts-directory-link").style.color = "white";
 
   function drawUserList(response) 
   {
@@ -31,17 +32,17 @@
       $(`#ulist-description-${userId}`).text(userInfo["description"]);
       $(`#ulist-mail-${userId}`).text(userInfo["email"]);
       if (userInfo["enabled"] == true && userInfo["confirmed"] == true && userInfo["expired"] == false)
-        document.getElementById(`ulist-status-${userId}`).innerHTML = " <span class=\"badge badge-success\">Operational</span>";
+        document.getElementById(`ulist-status-${userId}`).innerHTML = " <span class=\"badge bg-success\">Operational</span>";
       else {
         if (userInfo["enabled"] == false)
-          document.getElementById(`ulist-status-${userId}`).innerHTML = document.getElementById(`ulist-status-${userId}`).innerHTML + " <span class=\"badge badge-danger\">Disabled</span>";
+          document.getElementById(`ulist-status-${userId}`).innerHTML = document.getElementById(`ulist-status-${userId}`).innerHTML + " <span class=\"badge bg-danger\">Disabled</span>";
         if (userInfo["confirmed"] == false)
-          document.getElementById(`ulist-status-${userId}`).innerHTML = document.getElementById(`ulist-status-${userId}`).innerHTML + " <span class=\"badge badge-warning\">Unconfirmed</span>";
+          document.getElementById(`ulist-status-${userId}`).innerHTML = document.getElementById(`ulist-status-${userId}`).innerHTML + " <span class=\"badge bg-warning\">Unconfirmed</span>";
         if (userInfo["expired"] == true)
-          document.getElementById(`ulist-status-${userId}`).innerHTML = document.getElementById(`ulist-status-${userId}`).innerHTML + " <span class=\"badge badge-warning\">Expired</span>";
+          document.getElementById(`ulist-status-${userId}`).innerHTML = document.getElementById(`ulist-status-${userId}`).innerHTML + " <span class=\"badge bg-warning\">Expired</span>";
       }
       if (userInfo["superuser"] == true)
-        document.getElementById(`ulist-status-${userId}`).innerHTML = document.getElementById(`ulist-status-${userId}`).innerHTML + " <span class=\"badge badge-primary\">SuperUser</span>";
+        document.getElementById(`ulist-status-${userId}`).innerHTML = document.getElementById(`ulist-status-${userId}`).innerHTML + " <span class=\"badge bg-primary\">SuperUser</span>";
 
       userId++;
     }

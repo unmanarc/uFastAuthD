@@ -1,31 +1,33 @@
 <%include:/assets/hidden/inc.main.header.html%>
 <%include:/assets/hidden/inc.accounts.header.html%>
 
+
 <table width=90% align="center" style=" border-spacing: 15px;   border-collapse: separate;">
   <tr><td align="right" width=15%>Editing Account: </td><td><input type="username" name="username" id="accountName" class="form-control" placeholder="Account Name" readonly></td></tr>
 </table>
+
 
 <table width=90% align="center" style=" border-spacing: 15px;   border-collapse: separate;">
 <tr>
   <td>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">Details</a>
+        <button class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details" type="button" role="tab" aria-controls="details" aria-selected="true">Details</button>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="groups-tab" data-toggle="tab" href="#groups" role="tab" aria-controls="groups" aria-selected="false">Groups</a>
+        <button class="nav-link" id="groups-tab" data-bs-toggle="tab" data-bs-target="#groups" type="button" role="tab" aria-controls="groups" aria-selected="false">Groups</button>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="applications-tab" data-toggle="tab" href="#applications" role="tab" aria-controls="applications" aria-selected="false">Applications</a>
+        <button class="nav-link" id="applications-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab" aria-controls="applications" aria-selected="false">Applications</button>
       </li>
       <!-- <li class="nav-item">
-        <a class="nav-link" id="expiration-tab" data-toggle="tab" href="#expiration" role="tab" aria-controls="expiration" aria-selected="false">Expiration</a>
+        <button class="nav-link" id="expiration-tab" data-bs-toggle="tab" data-bs-target="#expiration" type="button" role="tab" aria-controls="expiration" aria-selected="false">Expiration</button>
       </li> -->
       <li class="nav-item">
-        <a class="nav-link" id="advanced-tab" data-toggle="tab" href="#advanced" role="tab" aria-controls="advanced" aria-selected="false">Advanced Controls</a>
+        <button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced" type="button" role="tab" aria-controls="advanced" aria-selected="false">Advanced Controls</button>
       </li>
       <!-- <li class="nav-item">
-        <a class="nav-link" id="logs-tab" data-toggle="tab" href="#logs" role="tab" aria-controls="logs" aria-selected="false">Logs</a>
+        <button class="nav-link" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs" type="button" role="tab" aria-controls="logs" aria-selected="false">Logs</button>
       </li> -->
     </ul>
   </td>
