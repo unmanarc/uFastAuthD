@@ -651,41 +651,41 @@ json Templates::LoginAuth::getStaticContent2(
             "/assets/js/mantids_passwd.js",
             "/assets/js/mantids_validations.js",
             "/assets/hidden/js/progress.js",
-            "/assets/hidden/js/toats.js",
+            "/assets/hidden/js/toasts.js",
             "/assets/css/login.css",
             "/assets/css/progress.css",
             "/assets/css/select.css",
             "/assets/css/sticky-footer.css",
 
             // Bootstrap:
-            "/assets/css/bootstrap-grid.min.css"
-            "/assets/css/bootstrap-grid.rtl.min.css"
-            "/assets/css/bootstrap-reboot.min.css"
-            "/assets/css/bootstrap-reboot.rtl.min.css"
-            "/assets/css/bootstrap-utilities.min.css"
-            "/assets/css/bootstrap-utilities.rtl.min.css"
-            "/assets/css/bootstrap.min.css"
-            "/assets/css/bootstrap.rtl.min.css"
-            "/assets/css/bootstrap-grid.min.css.map"
-            "/assets/css/bootstrap-grid.rtl.min.css.map"
-            "/assets/css/bootstrap-reboot.min.css.map"
-            "/assets/css/bootstrap-reboot.rtl.min.css.map"
-            "/assets/css/bootstrap-utilities.min.css.map"
-            "/assets/css/bootstrap-utilities.rtl.min.css.map"
-            "/assets/css/bootstrap.min.css.map"
-            "/assets/css/bootstrap.rtl.min.css.map"
-            "/assets/js/bootstrap.bundle.min.js"
-            "/assets/js/bootstrap.esm.min.js"
-            "/assets/js/bootstrap.min.js"
-            "/assets/js/bootstrap.bundle.min.js.map"
-            "/assets/js/bootstrap.esm.min.js.map"
-            "/assets/js/bootstrap.min.js.map"
+            "/assets/css/bootstrap-grid.min.css",
+            "/assets/css/bootstrap-grid.rtl.min.css",
+            "/assets/css/bootstrap-reboot.min.css",
+            "/assets/css/bootstrap-reboot.rtl.min.css",
+            "/assets/css/bootstrap-utilities.min.css",
+            "/assets/css/bootstrap-utilities.rtl.min.css",
+            "/assets/css/bootstrap.min.css",
+            "/assets/css/bootstrap.rtl.min.css",
+            "/assets/css/bootstrap-grid.min.css.map",
+            "/assets/css/bootstrap-grid.rtl.min.css.map",
+            "/assets/css/bootstrap-reboot.min.css.map",
+            "/assets/css/bootstrap-reboot.rtl.min.css.map",
+            "/assets/css/bootstrap-utilities.min.css.map",
+            "/assets/css/bootstrap-utilities.rtl.min.css.map",
+            "/assets/css/bootstrap.min.css.map",
+            "/assets/css/bootstrap.rtl.min.css.map",
+            "/assets/js/bootstrap.bundle.min.js",
+            "/assets/js/bootstrap.esm.min.js",
+            "/assets/js/bootstrap.min.js",
+            "/assets/js/bootstrap.bundle.min.js.map",
+            "/assets/js/bootstrap.esm.min.js.map",
+            "/assets/js/bootstrap.min.js.map",
 
             // JQuery:
-            "/assets/js/jquery.min.js"
-            "/assets/js/jquery.min.map"
-            "/assets/js/jquery.slim.min.js"
-            "/assets/js/jquery.slim.min.map"
+            "/assets/js/jquery.min.js",
+            "/assets/js/jquery.min.map",
+            "/assets/js/jquery.slim.min.js",
+            "/assets/js/jquery.slim.min.map",
         };
 
     for (const auto & asset : assets)

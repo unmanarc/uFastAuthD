@@ -1,5 +1,5 @@
 %define name uFastAuthD
-%define version 1.3.0
+%define version 1.3.1
 %define build_timestamp %{lua: print(os.date("%Y%m%d"))}
 Name:           %{name}
 Version:        %{version}
