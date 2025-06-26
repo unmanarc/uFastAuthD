@@ -61,7 +61,7 @@ bool WebServerImpl::createWebServer()
 
         WebServer * webServer = new WebServer();
         webServer->setRPCLog(LOG_RPC);
-        std::string resourcesPath = Globals::getConfig_main()->get<std::string>("WebServer.ResourcesPath",AUTHSERVER_WEBDIR);
+        std::string resourcesPath = Globals::getConfig_main()->get<std::string>("WebServer.ResourcesPath2",AUTHSERVER_WEBDIR_V2);
         if (!webServer->setDocumentRootPath( resourcesPath ))
         {
             LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error locating web server resources at %s",resourcesPath.c_str() );

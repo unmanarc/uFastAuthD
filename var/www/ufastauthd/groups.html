@@ -2,7 +2,6 @@
 <%include:/assets/hidden/inc.groups.header.html%>
 <script>
   document.getElementById("apptitle").innerHTML = "Groups &#9658; Groups Directory";
-  document.getElementById("mainview-group-directory-link").style.color = "white";
 
   function ajaxLoadGroupList() {
     var method = "groupsBasicInfoSearch";
@@ -13,7 +12,6 @@
       type: 'POST',
       success: function (response) {
         document.getElementById("tbody-ulist").innerHTML = "";
-        if (response == null) return;
         let groupId = 0;
         for (let groupInfo of response) {
           let b64GroupName = window.btoa(groupInfo["groupName"]);

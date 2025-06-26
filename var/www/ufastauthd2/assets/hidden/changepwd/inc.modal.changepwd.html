@@ -1,0 +1,298 @@
+<!-- Modal -->
+<script>
+
+
+  function createHexSalt32() {
+    // Generate a random 32-bit integer
+    const randomInt = crypto.getRandomValues(new Uint32Array(1))[0];
+
+    // Convert to hex string and pad with leading zeros if necessary
+    const saltHex = randomInt.toString(16).padStart(8, '0').toUpperCase();
+
+    return saltHex;
+  }
+
+  let inputPasswords;
+
+  function cancelChangePassword(pos) {
+    document.getElementById('chpasswd-' + pos).style.visibility = "collapse";
+    document.getElementById('passwdbtns-' + pos).style.visibility = "visible";
+  }
+
+  function generateRandomPassword(idx) 
+  {
+    document.getElementById(`pass0TR-${idx}`).style.visibility = "";
+    document.getElementById(`pass1TR-${idx}`).style.visibility = "collapse";
+    document.getElementById(`pass2TR-${idx}`).style.visibility = "collapse";
+    var proposedPasswd = genNewPassword();
+    document.getElementById(`newpassGEN-${idx}`).innerText = proposedPasswd;
+    document.getElementById(`newpass0-${idx}`).value = proposedPasswd;
+    document.getElementById(`newpass1-${idx}`).value = proposedPasswd;
+  }
+
+  function callChangePassword(secretDataValue, pos) {
+    $.ajax({
+      url: '/japi_exec?method=accountChangeSecret',
+      headers: { "CSRFToken": csrfToken },
+      data: {
+        payload: JSON.stringify(
+          {
+            accountName: $("#accountName").val(),
+            secretData: secretDataValue
+          })
+      },
+      type: 'POST',
+      success: function (result) {
+        showToastSuccess(`Password ${pos} changed successfully.`);
+        populatePasswordList();
+      },
+      error: function (result) {
+        showToastError("Error changing password.");
+      }
+    });
+  }
+
+  function changePassword(pos) {
+
+    var pwdCheck = checkPasswordReq($("#newpass0-" + pos).val(), 12);
+
+    if ($("#newpass0-" + pos).val() != $("#newpass1-" + pos).val()) {
+      showToastError("Password does not match.");
+      $("#newpass0-" + pos).focus();
+    }
+    else if (pwdCheck != "") {
+      showToastError(pwdCheck);
+      $("#newpass0-" + pos).focus();
+    }
+    else {
+      document.getElementById('chpasswd-' + pos).style.visibility = "collapse";
+      document.getElementById('passwdbtns-' + pos).style.visibility = "visible";
+
+      let secretData = inputPasswords[String(pos)];
+      let newPassword = $("#newpass0-" + pos).val();
+
+      secretData["FORCE_EXPIRATION"] = document.getElementById('changeAtNextLogon-' + pos).checked ? "1" : "0";
+      secretData["LOCKED"] = "0"; // document.getElementById('passwordLocked-' + pos).checked ? "1" : "0";
+      secretData["EXPIRATION"] = "0";
+      secretData["HASH"] = createHexSalt32() + createHexSalt32();
+      secretData["SALT"] = createHexSalt32();
+
+      function updateHashAndCall(hash) {
+        secretData["HASH"] = hash.toUpperCase();
+        //console.log(secretData);
+        callChangePassword(secretData, pos);
+      }
+
+      if (secretData["PMODE"] === "0") {
+        // PLAIN.
+        updateHashAndCall(newPassword);
+      }
+      else if (secretData["PMODE"] === "1" || secretData["PMODE"] === "2") {
+        const hashType = secretData["PMODE"] === "1" ? "SHA-256" : "SHA-512";
+        const msgBuffer = new TextEncoder().encode(newPassword);
+
+        crypto.subtle.digest(hashType, msgBuffer).then(function (hashBuffer) {
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+          updateHashAndCall(hashHex);
+        });
+      }
+      else if (secretData["PMODE"] === "3" || secretData["PMODE"] === "4") {
+        const hashType = secretData["PMODE"] === "3" ? "SHA-256" : "SHA-512";
+        const saltArray = new Uint8Array(4);
+        for (let i = 0; i < 4; i++) {
+          saltArray[i] = parseInt(secretData["SALT"].substring(i * 2, i * 2 + 2), 16);
+        }
+
+        // To avoid TextEncoder converting the salt to UTF-8 bytes,
+        // we'll manually create a buffer that combines password (UTF-8) and salt (raw bytes).
+        const passwordBuffer = new TextEncoder().encode(newPassword); // Password as UTF-8
+        const saltView = new DataView(saltArray.buffer); // Salt as raw bytes
+
+        // Create a new ArrayBuffer with combined length.
+        const totalLength = passwordBuffer.length + saltArray.byteLength;
+        const combinedBuffer = new Uint8Array(totalLength);
+
+        // Copy password bytes first, then the salt bytes
+        combinedBuffer.set(passwordBuffer, 0);
+        combinedBuffer.set(saltArray, passwordBuffer.length);
+
+        // // Print the string byte by byte in hex
+        // let hexString = Array.from(combinedBuffer).map(byte => byte.toString(16).padStart(2, '0')).join(' ');
+        // console.log(hexString);
+
+        crypto.subtle.digest(hashType, combinedBuffer).then(function (hashBuffer) {
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+          updateHashAndCall(hashHex);
+        });
+      }
+      else {
+        //FN_GAUTHTIME=5
+        showToastError("PASSWORD FUNCTION NOT IMPLEMENTED YET.");
+        return;
+      }
+    }
+  }
+
+  function openChangePassword(pos) {
+    document.getElementById('chpasswd-' + pos).style.visibility = "visible";
+    document.getElementById('passwdbtns-' + pos).style.visibility = "collapse";
+  }
+
+
+  function drawPasswordList() {
+    document.getElementById("passwdlist-body").innerHTML = "";
+
+    // Extract the main keys (e.g., "0" and "3") from the inputPasswords object
+    const mainKeys = Object.keys(inputPasswords);
+
+    for (let idx of mainKeys) {
+
+      var input = inputPasswords[idx];
+
+      var passFunction = "Not Defined";
+      var isRequiredAtLogin = (input["REQUIRED_AT_LOGIN"] == "1") ? "true" : "false";
+      var badAtttempts = parseInt(input["BAD_ATTEMPTS"], 10);
+
+      if (input["PMODE"] == "0") passFunction = "Password";
+      else if (input["PMODE"] == "1") passFunction = "Password, SHA256";
+      else if (input["PMODE"] == "2") passFunction = "Password, SHA512";
+      else if (input["PMODE"] == "3") passFunction = "Password, SSHA256";
+      else if (input["PMODE"] == "4") passFunction = "Password, SSHA512";
+      else if (input["PMODE"] == "5") passFunction = "Google Authenticator";
+
+      var statusColor = "black";
+      var status = "Operational";
+      if (input["LOCKED"] == "1") {
+        status = "Locked (Bad Attempts)";
+        statusColor = "red";
+      }
+      else if (input["EXPIRATION"]) { // Check for the existence of 'expiresAt'
+        const expirationTime = new Date(parseInt(input["expiresAt"]));
+        const currentTime = new Date();
+        if (expirationTime <= currentTime) {
+          status = "Expired";
+          statusColor = "red";
+        }
+      }
+      else if (input["EXPIRATION"] === "0") {
+        // Handle cases where it doesn't expire
+        status = "Does Not Expire"; // Or keep Operational as default?
+      }
+
+      $("#passwdlist-body").append(
+        `<div class="row  justify-content-center align-items-center">
+         <div class="my-auto">
+           <div class="card card-block d-flex login-card">
+            <div class="card-body align-items-center justify-content-center">
+              <table width=100%>
+                <tr valign=top><td ><b>Description:</b></td><td align="right"><span style="font-weight: bolder;" id="passwdlist-description-${idx}"></span></td></tr>
+                <tr valign=top><td ><b>Type:</b></td><td align="right">  ${passFunction} (ID=${idx})</td></tr>
+                <tr valign=top><td ><b>Required for Login:</b></td><td align="right"> ${isRequiredAtLogin}</td></tr>
+                <tr valign=top><td ><b>Bad Attempts Count:</b></td><td align="right"> ${badAtttempts}</td></tr>
+                <tr valign=top><td ><b>Status:</b></td><td align="right"> <font color=${statusColor}>${status}</font></td></tr>
+                <tr valign=top id="chpasswd-${idx}" style="visibility: collapse;">
+                  <td colspan="2" align="right"><hr>
+                    <table width=100% style=" border-spacing: 10px;   border-collapse: separate;">
+                      <form action="#!">
+                        
+                        
+                        <tr valign=top id="pass1TR-${idx}">
+                          <td>New Password:</td>
+                          <td align="right"><input type="password" name="password" id="newpass0-${idx}" class="form-control" placeholder="********"></td>
+                        </tr>
+                        <tr valign=top id="pass2TR-${idx}">
+                          <td>Confirm New Password:</td><td align="right"><input type="password" name="password" id="newpass1-${idx}" class="form-control" placeholder="********"></td>
+                        </tr>
+
+
+                        <tr valign=top id="pass0TR-${idx}" style="visibility: collapse;"><td align="right">Generated Password:</td><td align="center"><h5 id="newpassGEN-${idx}" style=" font-weight: bold; font-family: 'Courier New', monospace;"></h5></td></tr>
+
+                        <tr valign=top>
+                          <td>Change password at next logon:</td>
+                          <td align="right"><input type="checkbox" name="changeAtNextLogon" id="changeAtNextLogon-${idx}" ${input["FORCE_EXPIRATION"] == "1" ? 'checked' : ''}></td>
+                        </tr>
+
+
+                     <!--   <tr valign=top>
+                          <td>Password Locked:</td>
+                          <td align="right"><input type="checkbox" name="passwordLocked" id="passwordLocked-${idx}" ${input["LOCKED"] == "1" ? 'checked' : ''}></td>
+                        </tr> -->
+
+                        <tr valign=top>
+                          <td align="left">
+                            <input class="btn btn-secondary" type="button" value="Generate Random Password" onclick="javascript:generateRandomPassword(${idx})">
+                          </td>
+                          <td align="right"><br><input class="btn btn-secondary" type="button" value="Cancel" onclick="javascript:cancelChangePassword(${idx})"> 
+                            <input class="btn btn-dark" type="button" value="Change" onclick="javascript:changePassword(${idx})">
+                          </td>
+                        </tr>
+                      </form>
+                    </table>
+                  </td>
+                </tr>
+                <tr valign=top id="passwdbtns-${idx}">
+                  <td colspan="2" align="right"><hr>
+                    <input class="btn btn-dark" type="button" value="Change Password" onclick="javascript:openChangePassword(${idx})">
+                  </td>
+                </tr>
+              </table>
+           </div>
+          </div>
+         </div>
+        </div>
+        <br>`
+      );
+
+      $(`#newpass0-${idx}`).keypress(function (e) {
+        if (e.which === 13) { // Enter key
+          $(`#newpass1-${idx}`).focus();
+        }
+      });
+      $(`#newpass1-${idx}`).keypress(function (e) {
+        var currentIDX = idx;
+        var key = e.which;
+        if (key == 13) { // the enter key code
+          console.log(currentIDX);
+          changePassword(currentIDX);
+        }
+      });
+      $(`#passwdlist-description-${idx}`).text(input["DESCRIPTION"]);
+    }
+  }
+  function populatePasswordList() {
+    $.ajax({
+      url: '/japi_exec?method=getAccountAllSecretsPublicData',
+      headers: { "CSRFToken": csrfToken },
+      data: { payload: JSON.stringify({ accountName: $("#accountName").val() }) },
+      type: 'POST',
+      success: function (result) {
+        inputPasswords = result;
+        drawPasswordList();
+      },
+      error: commonFunctionError
+    });
+  }
+
+
+</script>
+
+
+<div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="changePwdModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="changePwdModalLabel">Account Secrets Management</h1>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body" id="passwdlist-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>

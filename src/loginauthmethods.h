@@ -53,7 +53,10 @@ private:
     static json getAccountAllSecretsPublicData(void * obj,const std::string &connectionKey,  const json & payload, void*, const std::string &);
     static json isAccountSuperUser(void * obj,const std::string &connectionKey,  const json & payload, void*, const std::string &);
     static json accountValidateAttribute(void * obj,const std::string &connectionKey,  const json & payload, void*, const std::string &);
+
     static json getStaticContent(void *, const std::string &, const json &, void*, const std::string &);
+    static json getStaticContent2(void *, const std::string &, const json &, void*, const std::string &);
+
     static std::string getAppNameFromConnectionKey(const std::string &connectionKey);
 
 };

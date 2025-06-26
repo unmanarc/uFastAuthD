@@ -172,7 +172,7 @@ bool AuthStorageImpl::createAdmin(Authentication::Manager_DB *authManager,std::s
     secretData.forceExpiration = true; // Expired (to be changed on the first login).
 
     Mantids::Authentication::sAccountDetails accountDetails;
-    accountDetails.sDescription = "Auto-generated Superuser Account";
+    accountDetails.sDescription = "Auto-generated Administrator Account";
     accountDetails.sEmail = "";
     accountDetails.sExtraData = "";
     accountDetails.sGivenName = "";

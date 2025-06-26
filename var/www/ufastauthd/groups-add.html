@@ -2,7 +2,6 @@
 <%include:/assets/hidden/inc.groups.header.html%>
 <script>
     document.getElementById("apptitle").innerHTML = "Groups &#9658; Create New Group";
-    document.getElementById("mainview-group-create-link").style.color = "white";
 
     function csrfReady() {
     }
@@ -41,27 +40,13 @@
         return true;
     }
 </script>
-<table width=90% align="" style=" border-spacing: 15px;   border-collapse: separate;">
-    <tr>
-        <td colspan="2" align="right"> <button type="button" class="btn btn-primary"
-                onclick="javascript:ajaxCreateGroup()">Create Group</button> </td>
-    </tr>
 
-    <tr>
-        <td colspan="2" align="">
-            <h5>Group Info</h5>
-            <hr>
-        </td>
-    </tr>
-    <tr>
-        <td align="right">Group Name: </td>
-        <td><input type="text" name="groupName" id="groupName" class="form-control" placeholder="Group Name"
-                style="text-transform: uppercase" onkeypress="javascript:checkGroupName()"></td>
-    </tr>
-    <tr>
-        <td align="right">Description: </td>
-        <td><input id="description" class="form-control" placeholder="Description"></td>
-    </tr>
+<table width=90% align="" style=" border-spacing: 15px;   border-collapse: separate;">
+    <tr><td colspan="2" align="right"> <button type="button" class="btn btn-primary" onclick="javascript:ajaxCreateGroup()">Create Group</button>  </td></tr>
+
+    <tr><td colspan="2" align="">          <h5>Group Info</h5>      <hr>      </td> </tr>
+  <tr><td align="right">Group Name: </td><td><input type="text" name="groupName" id="groupName" class="form-control" placeholder="Group Name" style="text-transform: uppercase" onkeypress="javascript:checkGroupName()"></td></tr>
+  <tr><td align="right">Description: </td><td><input id="description" class="form-control" placeholder="Description"></td></tr>
 </table>
 
 <%include:/assets/hidden/inc.groups.footer.html%>

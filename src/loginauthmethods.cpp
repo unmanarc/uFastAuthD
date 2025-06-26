@@ -81,6 +81,7 @@ void Mantids::RPC::Templates::LoginAuth::AddLoginAuthMethods(Mantids::Authentica
 
     // PROVIDED STATIC CONTENT FUNCTIONS:
     fastRPC->addMethod("getStaticContent",{&getStaticContent,auth});
+    fastRPC->addMethod("getStaticContent2",{&getStaticContent2,auth});
 
 }
 
@@ -584,55 +585,108 @@ json Templates::LoginAuth::getStaticContent(void *, const std::string &, const j
 {
     json staticContents;
     // Now here we send/init everything...
-    std::string resourcesPath = Globals::getConfig_main()->get<std::string>("WebServer.ResourcesPath",AUTHSERVER_WEBDIR);
+    std::string resourcesPath = Globals::getConfig_main()->get<std::string>("WebServer.ResourcesPath",AUTHSERVER_WEBDIR_V1);
 
     int i=0;
 
     // Push static content required for login operations
 
     std::list<std::string> assets
-            = {
-                    // Mantids:
-                    "/secrets.html",
-                    "/assets/js/mantids_login.js",
-                    "/assets/js/mantids_main.js",
-                    "/assets/js/mantids_passwd.js",
-                    "/assets/js/mantids_validations.js",
-                    "/assets/css/login.css",
-                    "/assets/css/progress.css",
-                    "/assets/css/select.css",
-                    "/assets/css/sticky-footer.css",
+        = {
+            // Mantids:
+            "/secrets.html",
+            "/assets/js/mantids_login.js",
+            "/assets/js/mantids_main.js",
+            "/assets/js/mantids_passwd.js",
+            "/assets/js/mantids_validations.js",
+            "/assets/css/login.css",
+            "/assets/css/progress.css",
+            "/assets/css/select.css",
+            "/assets/css/sticky-footer.css",
 
-                    // Bootstrap:
-                    "/assets/css/bootstrap-grid.min.css"
-                    "/assets/css/bootstrap-grid.rtl.min.css"
-                    "/assets/css/bootstrap-reboot.min.css"
-                    "/assets/css/bootstrap-reboot.rtl.min.css"
-                    "/assets/css/bootstrap-utilities.min.css"
-                    "/assets/css/bootstrap-utilities.rtl.min.css"
-                    "/assets/css/bootstrap.min.css"
-                    "/assets/css/bootstrap.rtl.min.css"
-                    "/assets/css/bootstrap-grid.min.css.map"
-                    "/assets/css/bootstrap-grid.rtl.min.css.map"
-                    "/assets/css/bootstrap-reboot.min.css.map"
-                    "/assets/css/bootstrap-reboot.rtl.min.css.map"
-                    "/assets/css/bootstrap-utilities.min.css.map"
-                    "/assets/css/bootstrap-utilities.rtl.min.css.map"
-                    "/assets/css/bootstrap.min.css.map"
-                    "/assets/css/bootstrap.rtl.min.css.map"
-                    "/assets/js/bootstrap.bundle.min.js"
-                    "/assets/js/bootstrap.esm.min.js"
-                    "/assets/js/bootstrap.min.js"
-                    "/assets/js/bootstrap.bundle.min.js.map"
-                    "/assets/js/bootstrap.esm.min.js.map"
-                    "/assets/js/bootstrap.min.js.map"
-                    
-                    // JQuery:
-                    "/assets/js/jquery.min.js"
-                    "/assets/js/jquery.min.map"
-                    "/assets/js/jquery.slim.min.js"
-                    "/assets/js/jquery.slim.min.map"
-              };
+            // JQuery:
+            "/assets/js/jquery-3.6.0.min.js",
+            "/assets/js/jquery-3.5.1.min.js",
+
+            // Bootstrap:
+            "/assets/js/bootstrap.min.js",
+            "/assets/css/bootstrap-grid.min.css",
+            "/assets/css/bootstrap-reboot.min.css.map",
+            "/assets/css/bootstrap-grid.min.css.map",
+            "/assets/css/bootstrap-reboot.min.css",
+            "/assets/css/bootstrap.min.css",
+            "/assets/css/bootstrap.min.css.map",
+            "/assets/js/bootstrap.min.js.map",
+            "/assets/js/bootstrap.bundle.min.js.map",
+            "/assets/js/bootstrap.min.js",
+            "/assets/js/bootstrap.bundle.min.js",
+        };
+
+    for (const auto & asset : assets)
+    {
+        staticContents[i]["content"] = readFile2String(resourcesPath + asset);
+        staticContents[i++]["path"] = asset;
+    }
+    return staticContents;
+}
+
+json Templates::LoginAuth::getStaticContent2(
+    void *, const std::string &, const json &, void *, const std::string &)
+{
+
+    json staticContents;
+    // Now here we send/init everything...
+    std::string resourcesPath = Globals::getConfig_main()->get<std::string>("WebServer.ResourcesPath2",AUTHSERVER_WEBDIR_V2);
+
+    int i=0;
+
+    // Push static content required for login operations
+
+    std::list<std::string> assets
+        = {
+            // Mantids:
+            "/secrets.html",
+            "/assets/js/mantids_login.js",
+            "/assets/js/mantids_main.js",
+            "/assets/js/mantids_passwd.js",
+            "/assets/js/mantids_validations.js",
+            "/assets/hidden/js/progress.js",
+            "/assets/hidden/js/toats.js",
+            "/assets/css/login.css",
+            "/assets/css/progress.css",
+            "/assets/css/select.css",
+            "/assets/css/sticky-footer.css",
+
+            // Bootstrap:
+            "/assets/css/bootstrap-grid.min.css"
+            "/assets/css/bootstrap-grid.rtl.min.css"
+            "/assets/css/bootstrap-reboot.min.css"
+            "/assets/css/bootstrap-reboot.rtl.min.css"
+            "/assets/css/bootstrap-utilities.min.css"
+            "/assets/css/bootstrap-utilities.rtl.min.css"
+            "/assets/css/bootstrap.min.css"
+            "/assets/css/bootstrap.rtl.min.css"
+            "/assets/css/bootstrap-grid.min.css.map"
+            "/assets/css/bootstrap-grid.rtl.min.css.map"
+            "/assets/css/bootstrap-reboot.min.css.map"
+            "/assets/css/bootstrap-reboot.rtl.min.css.map"
+            "/assets/css/bootstrap-utilities.min.css.map"
+            "/assets/css/bootstrap-utilities.rtl.min.css.map"
+            "/assets/css/bootstrap.min.css.map"
+            "/assets/css/bootstrap.rtl.min.css.map"
+            "/assets/js/bootstrap.bundle.min.js"
+            "/assets/js/bootstrap.esm.min.js"
+            "/assets/js/bootstrap.min.js"
+            "/assets/js/bootstrap.bundle.min.js.map"
+            "/assets/js/bootstrap.esm.min.js.map"
+            "/assets/js/bootstrap.min.js.map"
+
+            // JQuery:
+            "/assets/js/jquery.min.js"
+            "/assets/js/jquery.min.map"
+            "/assets/js/jquery.slim.min.js"
+            "/assets/js/jquery.slim.min.map"
+        };
 
     for (const auto & asset : assets)
     {

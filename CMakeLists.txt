@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 include(GNUInstallDirs)
 
 set(APP_NAME "uFastAuthD")
-set(SVERSION 1.2.3)
+set(SVERSION 1.3.0)
 
 project(${APP_NAME})
 project(${PROJECT_NAME} VERSION ${SVERSION} DESCRIPTION "Unmanarc's Fast Authentication Daemon")
@@ -83,3 +83,30 @@ include_directories(${MANTIDS_LIBS_INCLUDE_DIRS})
 link_directories(${MANTIDS_LIBS_LIBRARY_DIRS})
 target_link_libraries(${APP_NAME} ${MANTIDS_LIBS_LIBRARIES})
 ################################################################################
+
+
+
+
+#############################################################################################################################
+# Update version in spec.:
+
+# File where %define version is located
+set(SPEC_FILE "${CMAKE_SOURCE_DIR}/rpm/build.spec")
+
+# Create a temporary file
+file(WRITE ${CMAKE_BINARY_DIR}/temp_build_spec.txt "")
+
+# Read the original file line by line
+file(STRINGS ${SPEC_FILE} SPEC_LINES)
+
+foreach(LINE ${SPEC_LINES})
+    # Find the line containing %define version and replace it with SVERSION value
+    if("${LINE}" MATCHES "^%define version .*$")
+        file(APPEND ${CMAKE_BINARY_DIR}/temp_build_spec.txt "%define version ${SVERSION}\n")
+    else()
+        file(APPEND ${CMAKE_BINARY_DIR}/temp_build_spec.txt "${LINE}\n")
+    endif()
+endforeach()
+
+# Replace the original file with the temporary one
+file(RENAME ${CMAKE_BINARY_DIR}/temp_build_spec.txt ${SPEC_FILE})
